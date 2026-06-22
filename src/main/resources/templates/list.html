@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Appointments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 20px;
+            color: #2c3e50;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        a {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        a:hover {
+            background: #27ae60;
+        }
+
+        form {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        select, input {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 5px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            text-align: left;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Appointment list</h1>
+
+<a href="/appointments/new">Create new appointment</a>
+<form method="get" action="/appointments">
+
+    <label>Doctor:</label>
+    <select name="doctorId">
+        <option value="">-- all --</option>
+        <option th:each="d : ${doctors}"
+                th:value="${d.id}"
+                th:text="${d.firstName + ' ' + d.lastName}">
+        </option>
+    </select>
+
+    <label>Patient:</label>
+    <select name="patientId">
+        <option value="">-- all --</option>
+        <option th:each="p : ${patients}"
+                th:value="${p.id}"
+                th:text="${p.firstName + ' ' + p.lastName}">
+        </option>
+    </select>
+
+    <label>From:</label>
+    <input type="datetime-local" name="from"/>
+
+    <label>To:</label>
+    <input type="datetime-local" name="to"/>
+
+    <label>Description:</label>
+    <input type="text" name="description"/>
+
+    <button type="submit">Filter</button>
+</form>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th onclick="sortTable(1)" style="cursor:pointer;">Patient</th>
+        <th onclick="sortTable(2)" style="cursor:pointer;">Doctor</th>
+        <th onclick="sortTable(3)" style="cursor:pointer;">Date</th>
+        <th onclick="sortTable(4)" style="cursor:pointer;">Duration(minutes)</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="a : ${appointments}">
+        <td th:text="${a.id}"></td>
+        <td th:text="${a.patient.lastName}"></td>
+        <td th:text="${a.doctor.lastName}"></td>
+        <td th:text="${a.date}"></td>
+        <td th:text="${a.durationMinutes}"></td>
+        <td th:text="${a.description}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+<script>
+    function sortTable(colIndex) {
+        const table = document.querySelector("table");
+        const rows = Array.from(table.rows).slice(1);
+
+        let asc = table.getAttribute("data-sort") !== "asc";
+        table.setAttribute("data-sort", asc ? "asc" : "desc");
+
+        rows.sort((a, b) => {
+            let A = a.cells[colIndex].innerText.trim();
+            let B = b.cells[colIndex].innerText.trim();
+
+            if (colIndex === 3) {
+                return asc
+                    ? new Date(A) - new Date(B)
+                    : new Date(B) - new Date(A);
+            }
+
+            if (colIndex === 4) {
+                return asc
+                    ? Number(A) - Number(B)
+                    : Number(B) - Number(A);
+            }
+
+            return asc
+                ? A.localeCompare(B)
+                : B.localeCompare(A);
+        });
+
+        rows.forEach(row => table.appendChild(row));
+    }
+</script>

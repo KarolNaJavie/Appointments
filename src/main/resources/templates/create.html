@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Appointment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 20px;
+            color: #2c3e50;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        a {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: #2ecc71;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        a:hover {
+            background: #27ae60;
+        }
+
+        form {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        select, input {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 5px;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            text-align: left;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Create Appointment</h1>
+
+<form th:action="@{/appointments}" th:object="${appointment}" method="post">
+
+    <div>
+        <label>Date:</label>
+        <input type="datetime-local" th:field="*{date}" />
+    </div>
+
+    <div>
+        <label>Description:</label>
+        <input type="text" th:field="*{description}" />
+    </div>
+
+    <div>
+        <label>Duration (minutes):</label>
+        <input type="number" th:field="*{durationMinutes}" />
+    </div>
+
+    <div>
+        <label>Patient:</label>
+        <select th:field="*{patientId}">
+            <option value="">-- select patient --</option>
+            <option th:each="p : ${patients}"
+                    th:value="${p.id}"
+                    th:text="${p.lastName}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Doctor:</label>
+        <select th:field="*{doctorId}">
+            <option value="">-- select doctor --</option>
+            <option th:each="d : ${doctors}"
+                    th:value="${d.id}"
+                    th:text="${d.lastName}">
+            </option>
+        </select>
+    </div>
+
+    <button type="submit">Create</button>
+</form>
+
+</body>
+</html>
