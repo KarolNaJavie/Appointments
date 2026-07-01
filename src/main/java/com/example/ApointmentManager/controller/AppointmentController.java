@@ -2,6 +2,7 @@ package com.example.ApointmentManager.controller;
 
 import com.example.ApointmentManager.model.CreateAppointmentCommand;
 import com.example.ApointmentManager.model.FilterAppointmentCommand;
+import com.example.ApointmentManager.model.Reason;
 import com.example.ApointmentManager.service.AppointmentService;
 import com.example.ApointmentManager.service.DoctorService;
 import com.example.ApointmentManager.service.PatientService;
@@ -28,6 +29,7 @@ public class AppointmentController {
         model.addAttribute("appointment", new CreateAppointmentCommand());
         model.addAttribute("patients", patientService.findAll());
         model.addAttribute("doctors", doctorService.findAll());
+        model.addAttribute("reasons", Reason.values());
         return "create";
     }
 

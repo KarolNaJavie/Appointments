@@ -2,18 +2,20 @@ package com.example.ApointmentManager.service;
 
 import com.example.ApointmentManager.model.*;
 import com.example.ApointmentManager.model.common.exception.DateAlreadyTaken;
+import com.example.ApointmentManager.model.common.exception.DateInThePastException;
 import com.example.ApointmentManager.model.dto.AppointmentDTO;
 import com.example.ApointmentManager.repository.AppointmentRepository;
 import com.example.ApointmentManager.repository.DoctorRepository;
 import com.example.ApointmentManager.repository.PatientRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@RequiredArgsConstructor
 @Service
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
@@ -30,8 +32,7 @@ public class AppointmentService {
                 .date(cmd.getDate())
                 .doctor(doctor)
                 .patient(patient)
-                .description(cmd.getDescription())
-                .durationMinutes(cmd.getDurationMinutes())
+                .reason(cmd.getReason())
                 .build()));
     }
 
@@ -48,8 +49,8 @@ public class AppointmentService {
                         a.getDoctor().getId().equals(f.getDoctorId()))
                 .filter(a -> f.getPatientId() == null ||
                         a.getPatient().getId().equals(f.getPatientId()))
-                .filter(a -> f.getDescription() == null ||
-                        a.getDescription().toLowerCase().contains(f.getDescription().toLowerCase()))
+                .filter(a -> f.getReason() == null ||
+                        a.getReason().equals(f.getReason()))
                 .filter(a -> f.getFrom() == null ||
                         !a.getDate().isBefore(f.getFrom()))
                 .filter(a -> f.getTo() == null ||
@@ -60,12 +61,15 @@ public class AppointmentService {
 
     public void validateAppointment(CreateAppointmentCommand command) {
         if (appointmentRepository.existsByDoctorIdAndDateBetween(command.getDoctorId(),
-                command.getDate(), command.getDate().plusMinutes(command.getDurationMinutes()))) {
+                command.getDate(), command.getDate().plusMinutes(command.getReason().getDurationMinutes()))) {
             throw new DateAlreadyTaken("Doctor already has appointment with that date!");
         }
         if (appointmentRepository.existsByPatientIdAndDateBetween(command.getPatientId(),
-                command.getDate(), command.getDate().plusMinutes(command.getDurationMinutes()))) {
+                command.getDate(), command.getDate().plusMinutes(command.getReason().getDurationMinutes()))) {
             throw new DateAlreadyTaken("Patient already has appointment with that date!");
+        }
+        if (!command.getDate().isAfter(LocalDateTime.now())) {
+            throw new DateInThePastException("Date cannot be in the past!");
         }
     }
 }

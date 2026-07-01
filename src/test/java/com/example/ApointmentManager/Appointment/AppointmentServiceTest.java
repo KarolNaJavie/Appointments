@@ -55,7 +55,7 @@ public class AppointmentServiceTest {
     public void testCreate_ResultsInDoctorNotFound() {
         CreateAppointmentCommand command = new CreateAppointmentCommand();
         command.setDoctorId(1L);
-        command.setDurationMinutes(10L);
+        command.setReason(Reason.CHECK_UP);
         command.setDate(LocalDateTime.now().plusDays(1));
         when(doctorRepository.findById(any())).thenReturn(Optional.empty());
         assertThatExceptionOfType(EntityNotFoundException.class).isThrownBy(() -> appointmentService.create(command));
@@ -66,7 +66,7 @@ public class AppointmentServiceTest {
         CreateAppointmentCommand command = new CreateAppointmentCommand();
         command.setDoctorId(1L);
         command.setPatientId(1L);
-        command.setDurationMinutes(10L);
+        command.setReason(Reason.CHECK_UP);
         command.setDate(LocalDateTime.now().plusDays(1));
         when(doctorRepository.findById(any())).thenReturn(Optional.of(Doctor.builder().build()));
         when(patientRepository.findById(any())).thenReturn(Optional.empty());
@@ -78,10 +78,10 @@ public class AppointmentServiceTest {
         CreateAppointmentCommand command = new CreateAppointmentCommand();
         command.setDoctorId(1L);
         command.setPatientId(1L);
-        command.setDurationMinutes(10L);
+        command.setReason(Reason.CHECK_UP);
         command.setDate(LocalDateTime.now().plusDays(1));
         when(appointmentRepository.existsByDoctorIdAndDateBetween(command.getDoctorId(),
-                command.getDate(), command.getDate().plusMinutes(command.getDurationMinutes()))).thenReturn(true);
+                command.getDate(), command.getDate().plusMinutes(command.getReason().getDurationMinutes()))).thenReturn(true);
         assertThatExceptionOfType(DateAlreadyTaken.class).isThrownBy(() -> appointmentService.validateAppointment(command));
     }
 

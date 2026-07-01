@@ -98,13 +98,13 @@
     </div>
 
     <div>
-        <label>Description:</label>
-        <input type="text" th:field="*{description}" />
-    </div>
-
-    <div>
-        <label>Duration (minutes):</label>
-        <input type="number" th:field="*{durationMinutes}" />
+        <select th:field="*{reason}">
+            <option value="">-- Select reason --</option>
+            <option th:each="reason : ${reasons}"
+                    th:value="${reason}"
+                    th:text="${reason}">
+            </option>
+        </select>
     </div>
 
     <div>

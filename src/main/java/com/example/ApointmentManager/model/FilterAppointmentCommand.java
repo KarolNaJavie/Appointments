@@ -9,7 +9,7 @@ public class FilterAppointmentCommand {
 
     private Long doctorId;
     private Long patientId;
-    private String description;
+    private Reason reason;
     private LocalDateTime from;
     private LocalDateTime to;
 }

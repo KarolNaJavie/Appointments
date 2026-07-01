@@ -1,8 +1,7 @@
 package com.example.ApointmentManager.model.dto;
 
 import com.example.ApointmentManager.model.Appointment;
-import com.example.ApointmentManager.model.Doctor;
-import com.example.ApointmentManager.model.Patient;
+import com.example.ApointmentManager.model.Reason;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,19 +13,17 @@ public class AppointmentDTO {
 
     private Long id;
     private LocalDateTime date;
-    private String description;
-    private Long durationMinutes;
-    private Patient patient;
-    private Doctor doctor;
+    private Reason reason;
+    private PatientDTO patient;
+    private DoctorDTO doctor;
 
     public static AppointmentDTO fromEntity(Appointment appointment) {
         return AppointmentDTO.builder()
                 .id(appointment.getId())
                 .date(appointment.getDate())
-                .description(appointment.getDescription())
-                .durationMinutes(appointment.getDurationMinutes())
-                .patient(appointment.getPatient())
-                .doctor(appointment.getDoctor())
+                .reason(appointment.getReason())
+                .patient(PatientDTO.fromEntity(appointment.getPatient()))
+                .doctor(DoctorDTO.fromEntity(appointment.getDoctor()))
                 .build();
     }
 }

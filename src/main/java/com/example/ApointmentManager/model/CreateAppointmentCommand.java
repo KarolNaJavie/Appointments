@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class CreateAppointmentCommand {
     private LocalDateTime date;
-    private String description;
-    private Long durationMinutes;
+    private Reason reason;
     private Long patientId;
     private Long doctorId;
 }

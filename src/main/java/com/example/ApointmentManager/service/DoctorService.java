@@ -2,13 +2,13 @@ package com.example.ApointmentManager.service;
 
 import com.example.ApointmentManager.model.dto.DoctorDTO;
 import com.example.ApointmentManager.repository.DoctorRepository;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@Data
+@RequiredArgsConstructor
 public class DoctorService {
     public final DoctorRepository doctorRepository;
 

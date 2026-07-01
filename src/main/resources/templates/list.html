@@ -116,8 +116,13 @@
     <label>To:</label>
     <input type="datetime-local" name="to"/>
 
-    <label>Description:</label>
-    <input type="text" name="description"/>
+    <label>Reason:</label>
+    <select name="reason">
+        <option th:each="reason : ${reasons}"
+                th:value="${reason}"
+                th:text="${reason}">
+        </option>
+    </select>
 
     <button type="submit">Filter</button>
 </form>
@@ -139,8 +144,8 @@
         <td th:text="${a.patient.lastName}"></td>
         <td th:text="${a.doctor.lastName}"></td>
         <td th:text="${a.date}"></td>
-        <td th:text="${a.durationMinutes}"></td>
-        <td th:text="${a.description}"></td>
+        <td th:text="${a.reason.durationMinutes}"></td>
+        <td th:text="${a.reason}"></td>
     </tr>
     </tbody>
 </table>

@@ -20,7 +20,7 @@ public class Appointment {
     private Long id;
 
     private LocalDateTime date;
-    private String description;
+    private Reason reason;
     private Long durationMinutes;
 
     @ManyToOne()
