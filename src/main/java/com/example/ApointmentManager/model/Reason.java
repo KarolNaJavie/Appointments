@@ -1,5 +1,8 @@
 package com.example.ApointmentManager.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Reason {
     CONSULTATION(30),
     CHECK_UP(20),
@@ -12,7 +15,4 @@ public enum Reason {
         this.durationMinutes = durationMinutes;
     }
 
-    public long getDurationMinutes() {
-        return durationMinutes;
-    }
 }

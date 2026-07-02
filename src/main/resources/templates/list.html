@@ -123,6 +123,14 @@
                 th:text="${reason}">
         </option>
     </select>
+    <label>Sort by:</label>
+    <select name="sort">
+        <option value="">-- none --</option>
+        <option value="date">Date</option>
+        <option value="patient.lastName">Patient</option>
+        <option value="doctor.lastName">Doctor</option>
+        <option value="reason.durationMinutes">Duration</option>
+    </select>
 
     <button type="submit">Filter</button>
 </form>
@@ -152,35 +160,3 @@
 
 </body>
 </html>
-<script>
-    function sortTable(colIndex) {
-        const table = document.querySelector("table");
-        const rows = Array.from(table.rows).slice(1);
-
-        let asc = table.getAttribute("data-sort") !== "asc";
-        table.setAttribute("data-sort", asc ? "asc" : "desc");
-
-        rows.sort((a, b) => {
-            let A = a.cells[colIndex].innerText.trim();
-            let B = b.cells[colIndex].innerText.trim();
-
-            if (colIndex === 3) {
-                return asc
-                    ? new Date(A) - new Date(B)
-                    : new Date(B) - new Date(A);
-            }
-
-            if (colIndex === 4) {
-                return asc
-                    ? Number(A) - Number(B)
-                    : Number(B) - Number(A);
-            }
-
-            return asc
-                ? A.localeCompare(B)
-                : B.localeCompare(A);
-        });
-
-        rows.forEach(row => table.appendChild(row));
-    }
-</script>

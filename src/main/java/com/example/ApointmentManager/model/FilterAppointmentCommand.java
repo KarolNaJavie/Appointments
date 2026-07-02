@@ -12,4 +12,5 @@ public class FilterAppointmentCommand {
     private Reason reason;
     private LocalDateTime from;
     private LocalDateTime to;
+    private String sort;
 }

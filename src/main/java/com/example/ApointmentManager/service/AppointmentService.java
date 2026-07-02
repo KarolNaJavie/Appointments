@@ -2,13 +2,14 @@ package com.example.ApointmentManager.service;
 
 import com.example.ApointmentManager.model.*;
 import com.example.ApointmentManager.model.common.exception.DateAlreadyTaken;
-import com.example.ApointmentManager.model.common.exception.DateInThePastException;
+import com.example.ApointmentManager.model.common.exception.DateInThePast;
 import com.example.ApointmentManager.model.dto.AppointmentDTO;
 import com.example.ApointmentManager.repository.AppointmentRepository;
 import com.example.ApointmentManager.repository.DoctorRepository;
 import com.example.ApointmentManager.repository.PatientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +45,10 @@ public class AppointmentService {
     }
 
     public List<AppointmentDTO> findFiltered(FilterAppointmentCommand f) {
-        return appointmentRepository.findAll().stream()
+        Sort sort = f.getSort() == null || f.getSort().isBlank()
+                ? Sort.unsorted()
+                : Sort.by(f.getSort());
+        return appointmentRepository.findAll(sort).stream()
                 .filter(a -> f.getDoctorId() == null ||
                         a.getDoctor().getId().equals(f.getDoctorId()))
                 .filter(a -> f.getPatientId() == null ||
@@ -69,7 +73,7 @@ public class AppointmentService {
             throw new DateAlreadyTaken("Patient already has appointment with that date!");
         }
         if (!command.getDate().isAfter(LocalDateTime.now())) {
-            throw new DateInThePastException("Date cannot be in the past!");
+            throw new DateInThePast("Date cannot be in the past!");
         }
     }
 }
