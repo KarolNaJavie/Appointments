@@ -34,6 +34,7 @@ public class AppointmentService {
                 .doctor(doctor)
                 .patient(patient)
                 .reason(cmd.getReason())
+                .durationMinutes(cmd.getReason().getDurationMinutes())
                 .build()));
     }
 
